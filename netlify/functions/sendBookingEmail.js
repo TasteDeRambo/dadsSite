@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 // FaunaDB client
 const client = new faunadb.Client({
-  secret: 'fnAFttvm46AATTH_nt8F8dJ82exfYN5hgev1vSwW'
+  secret: process.env.FAUNA_SECRET
 });
 
 const q = faunadb.query;
@@ -56,7 +56,11 @@ Email: ${data.email}
 Phone: ${data.phone}
 Date: ${data.selectedDate}
 Time: ${data.selectedTime}
-Address: ${data.address}`
+Address: ${data.address}
+Service Type: ${data.type}
+Message: ${data.message}
+Payment Method: ${data.payment}
+Uploaded Images: ${data.images ? data.images.join(', ') : 'None'}`
   };
 
   try {
