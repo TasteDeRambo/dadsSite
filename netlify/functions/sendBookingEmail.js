@@ -102,6 +102,10 @@ Uploaded Images: ${data.images.map(image => image.filename).join(', ')}`,
     try {
       const emailResponse = await transporter.sendMail(mailOptions);
       console.log('Email Response:', emailResponse);
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ success: true })
+      };
     } catch (error) {
       console.error('Nodemailer Error:', error);
       return {
@@ -109,11 +113,6 @@ Uploaded Images: ${data.images.map(image => image.filename).join(', ')}`,
         body: JSON.stringify({ success: false, error: 'Failed to send email' })
       };
     }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true })
-    };
   });
 
   busboy.end(Buffer.from(event.body, 'base64'));
