@@ -191,8 +191,8 @@ header, footer {
         const address = document.getElementById('address').value;
         const type = document.getElementById('type').value;
         const message = document.getElementById('message').value;
-        const images = [...document.getElementById('images').files].map(file => file.name);
         const payment = document.getElementById('payment').value;
+        const images = document.getElementById('images').files;
 
         // Check for required fields
         if (!name || !email || !phone || !selectedDate || !selectedTime || !address) {
@@ -207,31 +207,31 @@ header, footer {
             phone,
             selectedDate,
             selectedTime,
-            address
+            address,
+            type,
+            message,
+            payment,
+            images: [...images].map(file => file.name) // Save image names in local storage
         }));
 
-        // Prepare data to be sent to Netlify function
-        const bookingData = {
-            name,
-            email,
-            phone,
-            selectedDate,
-            selectedTime,
-            address, 
-            type, 
-            message,
-            images,
-            payment
-        };
-
-        console.log('Booking Data:', bookingData);
+        // Prepare form data to be sent to Netlify function
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('selectedDate', selectedDate);
+        formData.append('selectedTime', selectedTime);
+        formData.append('address', address);
+        formData.append('type', type);
+        formData.append('message', message);
+        formData.append('payment', payment);
+        for (const file of images) {
+            formData.append('images', file);
+        }
 
         fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bookingData)
+            body: formData
         })
         .then(response => {
             console.log('Server Response:', response);

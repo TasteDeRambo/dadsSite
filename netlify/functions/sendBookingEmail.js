@@ -1,5 +1,6 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
+const multiparty = require('multiparty');
 
 // FaunaDB client
 const client = new faunadb.Client({
@@ -16,7 +17,26 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const data = JSON.parse(event.body);
+  const form = new multiparty.Form();
+  const formData = await new Promise((resolve, reject) => {
+    form.parse(event, (error, fields, files) => {
+      if (error) reject(error);
+      resolve({ fields, files });
+    });
+  });
+
+  const data = {
+    name: formData.fields.name[0],
+    email: formData.fields.email[0],
+    phone: formData.fields.phone[0],
+    selectedDate: formData.fields.selectedDate[0],
+    selectedTime: formData.fields.selectedTime[0],
+    address: formData.fields.address[0],
+    type: formData.fields.type[0],
+    message: formData.fields.message[0],
+    payment: formData.fields.payment[0],
+    images: formData.files.images || [] // Handle file uploads
+  };
 
   // Log the received data
   console.log('Received data:', data);
@@ -25,7 +45,7 @@ exports.handler = async (event, context) => {
   try {
     const dbResponse = await client.query(
       q.Create(
-        q.Collection('bookings'), // Ensure this matches your collection name exactly
+        q.Collection('bookings'),
         { data }
       )
     );
@@ -47,6 +67,11 @@ exports.handler = async (event, context) => {
     }
   });
 
+  const attachments = data.images.map(image => ({
+    filename: image.originalFilename,
+    path: image.path
+  }));
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: process.env.EMAIL_USER,
@@ -60,7 +85,8 @@ Address: ${data.address}
 Service Type: ${data.type}
 Message: ${data.message}
 Payment Method: ${data.payment}
-Uploaded Images: ${data.images ? data.images.join(', ') : 'None'}`
+Uploaded Images: ${data.images.map(image => image.originalFilename).join(', ')}`,
+    attachments
   };
 
   try {
