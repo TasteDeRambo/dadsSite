@@ -21,11 +21,8 @@ exports.handler = async (event, context) => {
 
   const formData = await new Promise((resolve, reject) => {
     form.parse(event, (err, fields, files) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ fields, files });
-      }
+      if (err) reject(err);
+      resolve({ fields, files });
     });
   });
 
@@ -39,7 +36,7 @@ exports.handler = async (event, context) => {
     type: formData.fields.type,
     message: formData.fields.message,
     payment: formData.fields.payment,
-    images: formData.files.images ? [].concat(formData.files.images) : [] // Handle single and multiple files
+    images: formData.files.images ? (Array.isArray(formData.files.images) ? formData.files.images : [formData.files.images]) : []
   };
 
   // Log the received data
@@ -49,7 +46,7 @@ exports.handler = async (event, context) => {
   try {
     const dbResponse = await client.query(
       q.Create(
-        q.Collection('bookings'),
+        q.Collection('bookings'), // Ensure this matches your collection name exactly
         { data }
       )
     );
