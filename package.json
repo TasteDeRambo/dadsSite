@@ -8,10 +8,7 @@
   },
   "dependencies": {
     "faunadb": "^4.0.1",
-    "nodemailer": "^6.6.3",
-    "busboy": "^1.6.0",
-    "aws-sdk": "^2.1143.0",
-    "uuid": "^8.3.2"
+    "nodemailer": "^6.6.3"
   },
   "author": "",
   "license": "ISC"
