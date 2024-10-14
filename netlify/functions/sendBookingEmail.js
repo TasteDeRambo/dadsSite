@@ -60,16 +60,12 @@ Address: ${data.address}
 Service Type: ${data.type}
 Message: ${data.message}
 Payment Method: ${data.payment}
-Uploaded Images: ${data.images ? data.images.join(', ') : 'None'}` // Keeping image names if any
+Uploaded Images: ${data.images ? data.images.join(', ') : 'None'}`
   };
 
   try {
     const emailResponse = await transporter.sendMail(mailOptions);
     console.log('Email Response:', emailResponse);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true })
-    };
   } catch (error) {
     console.error('Nodemailer Error:', error);
     return {
@@ -77,4 +73,9 @@ Uploaded Images: ${data.images ? data.images.join(', ') : 'None'}` // Keeping im
       body: JSON.stringify({ success: false, error: 'Failed to send email' })
     };
   }
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ success: true })
+  };
 };
