@@ -216,6 +216,8 @@ header, footer {
             address
         };
 
+        console.log('Booking Data:', bookingData);
+
         fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
             method: 'POST',
             headers: {
@@ -223,8 +225,12 @@ header, footer {
             },
             body: JSON.stringify(bookingData)
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Server Response:', response);
+            return response.json();
+        })
         .then(data => {
+            console.log('Response Data:', data);
             if (data.success) {
                 // Redirect to confirmation page
                 window.location.href = 'confirmation.html';
@@ -234,7 +240,7 @@ header, footer {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Fai1ed to send booking data. Please try again.');
+            alert('Failed to send booking data. Please try again.');
         });
     });
 
