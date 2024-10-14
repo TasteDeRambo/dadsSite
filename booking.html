@@ -216,7 +216,7 @@ header, footer {
             address
         };
 
-        fetch('https://YOUR_FAUNA_FUNCTION_URL', {
+        fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -234,7 +234,7 @@ header, footer {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Failed to send booking data. Please try again.');
+            alert('Fai1ed to send booking data. Please try again.');
         });
     });
 
@@ -350,7 +350,7 @@ header, footer {
 
         // Load the Google Maps API script
         const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3WxQ8TyNHHUJIxu6imroL3hchsNL7tc&callback=initMap`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&callback=initMap`;
         script.async = true;
         document.head.appendChild(script);
     </script>

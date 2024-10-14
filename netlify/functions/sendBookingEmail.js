@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 // FaunaDB client
 const client = new faunadb.Client({
-  secret: 'fnAFXlEltRAASacUr_LudawtkoweIlm11bbAiOfD'
+  secret: process.env.FAUNA_SECRET
 });
 
 const q = faunadb.query;
@@ -38,14 +38,14 @@ exports.handler = async (event, context) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'kevalcantara2005@gmail.com',
-      pass: 'Alcantara2005'
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
 
   const mailOptions = {
-    from: 'YOUR_EMAIL@gmail.com',
-    to: 'YOUR_EMAIL@gmail.com',
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER,
     subject: 'New Booking',
     text: `Name: ${data.name}
 Email: ${data.email}
