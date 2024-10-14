@@ -25,7 +25,7 @@ exports.handler = async (event, context) => {
   try {
     const dbResponse = await client.query(
       q.Create(
-        q.Collection('bookings'), // Ensure this matches exactly with your collection name in FaunaDB
+        q.Collection('bookings'), // Ensure this matches your collection name exactly
         { data }
       )
     );
