@@ -1,8 +1,6 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
-const formidable = require('formidable');
-const fs = require('fs');
-const path = require('path');
+const aws = require('aws-sdk');
 
 // FaunaDB client
 const client = new faunadb.Client({
@@ -10,6 +8,13 @@ const client = new faunadb.Client({
 });
 
 const q = faunadb.query;
+
+// Configure AWS S3
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
@@ -23,10 +28,7 @@ exports.handler = async (event, context) => {
   form.uploadDir = '/tmp';
 
   const formData = await new Promise((resolve, reject) => {
-    form.parse({ 
-      headers: { 'content-type': event.headers['content-type'] || event.headers['Content-Type'] },
-      payload: Buffer.from(event.body, 'base64')
-    }, (err, fields, files) => {
+    form.parse(Buffer.from(event.body, 'base64'), (err, fields, files) => {
       if (err) reject(err);
       resolve({ fields, files });
     });
@@ -65,6 +67,29 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Upload images to S3 and get URLs
+  const imageUrls = [];
+  for (const image of data.images) {
+    const fileContent = fs.readFileSync(image.path);
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `${Date.now()}_${image.originalFilename}`,
+      Body: fileContent,
+      ContentType: image.mimetype
+    };
+
+    try {
+      const s3Response = await s3.upload(params).promise();
+      imageUrls.push(s3Response.Location);
+    } catch (error) {
+      console.error('S3 Upload Error:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ success: false, error: 'Failed to upload images' })
+      };
+    }
+  }
+
   // Send email using Nodemailer
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -73,12 +98,6 @@ exports.handler = async (event, context) => {
       pass: process.env.EMAIL_PASS
     }
   });
-
-  const attachments = data.images.map(image => ({
-    filename: image.originalFilename,
-    path: image.path,
-    contentType: image.mimetype
-  }));
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -93,8 +112,7 @@ Address: ${data.address}
 Service Type: ${data.type}
 Message: ${data.message}
 Payment Method: ${data.payment}
-Uploaded Images: ${data.images.map(image => image.originalFilename).join(', ')}`,
-    attachments
+Uploaded Images: ${imageUrls.join(', ')}`
   };
 
   try {
