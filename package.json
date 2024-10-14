@@ -1,17 +1,16 @@
 {
-    "name": "dads-site",
-    "version": "1.0.0",
-    "description": "Home repair booking site",
-    "main": "index.js",
-    "scripts": {
-      "start": "netlify dev"
-    },
-    "dependencies": {
-      "faunadb": "^4.0.1",
-      "nodemailer": "^6.6.3",
-      "formidable": "^1.2.2"
-    },
-    "author": "",
-    "license": "ISC"
+  "name": "dads-site",
+  "version": "1.0.0",
+  "description": "Home repair booking site",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "faunadb": "^4.0.1",
+    "nodemailer": "^6.6.3",
+    "busboy": "^1.6.0"
+  },
+  "author": "",
+  "license": "ISC"
 }
-  
