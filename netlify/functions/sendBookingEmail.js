@@ -1,6 +1,6 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
-const formidable = require('formidable');
+const { IncomingForm } = require('formidable');
 
 // FaunaDB client
 const client = new faunadb.Client({
@@ -17,25 +17,29 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const form = new formidable.IncomingForm();
+  const form = new IncomingForm();
+  form.uploadDir = '/tmp'; // Temporary directory to store uploaded files
+
+  const contentType = event.headers['content-type'] || event.headers['Content-Type'];
+  const buffer = Buffer.from(event.body, 'base64');
 
   const formData = await new Promise((resolve, reject) => {
-    form.parse(event, (err, fields, files) => {
+    form.parse({ headers: { 'content-type': contentType }, payload: buffer }, (err, fields, files) => {
       if (err) reject(err);
       resolve({ fields, files });
     });
   });
 
   const data = {
-    name: formData.fields.name,
-    email: formData.fields.email,
-    phone: formData.fields.phone,
-    selectedDate: formData.fields.selectedDate,
-    selectedTime: formData.fields.selectedTime,
-    address: formData.fields.address,
-    type: formData.fields.type,
-    message: formData.fields.message,
-    payment: formData.fields.payment,
+    name: formData.fields.name[0],
+    email: formData.fields.email[0],
+    phone: formData.fields.phone[0],
+    selectedDate: formData.fields.selectedDate[0],
+    selectedTime: formData.fields.selectedTime[0],
+    address: formData.fields.address[0],
+    type: formData.fields.type[0],
+    message: formData.fields.message[0],
+    payment: formData.fields.payment[0],
     images: formData.files.images ? (Array.isArray(formData.files.images) ? formData.files.images : [formData.files.images]) : []
   };
 
@@ -46,7 +50,7 @@ exports.handler = async (event, context) => {
   try {
     const dbResponse = await client.query(
       q.Create(
-        q.Collection('bookings'), // Ensure this matches your collection name exactly
+        q.Collection('bookings'),
         { data }
       )
     );
