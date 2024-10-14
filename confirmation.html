@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('images/your-3d-image.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .confirmation-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 50px;
+            text-align: center;
+            max-width: 600px;
+            margin: 100px auto;
+        }
+        h1, p {
+            margin-bottom: 1rem;
+        }
+        button {
+            background-color: #f39c12;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ccc;
+            color: #000;
+        }
+        .map {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 1rem;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <h1>Appointment Confirmation</h1>
+        <p><span id="userName"></span>, your appointment has been set for <span id="appointmentDate"></span> at <span id="appointmentTime"></span>.</p>
+        <div class="map" id="jobLocationMap"></div>
+        <p>You will get a response as fast as possible at <span id="userContact"></span>.</p>
+        <button onclick="window.location.href='index.html'">Go to Home</button>
+    </div>
+
+    <script>
+        // Retrieve booking data from local storage
+        const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+
+        // Display booking data
+        document.getElementById("userName").textContent = bookingData.name;
+        document.getElementById("appointmentDate").textContent = bookingData.selectedDate;
+        document.getElementById("appointmentTime").textContent = bookingData.selectedTime;
+        document.getElementById("userContact").textContent = `${bookingData.email}, ${bookingData.phone}`;
+
+        // Initialize Google Map with job location
+        function initMap() {
+            const geocoder = new google.maps.Geocoder();
+            const map = new google.maps.Map(document.getElementById('jobLocationMap'), {
+                center: { lat: -34.397, lng: 150.644 }, // Default center
+                zoom: 15
+            });
+
+            // Geocode the address and place a marker
+            geocoder.geocode({ address: bookingData.address }, (results, status) => {
+                if (status === 'OK') {
+                    map.setCenter(results[0].geometry.location);
+                    new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        // Load the Google Maps script with your API key
+        var script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3WxQ8TyNHHUJIxu6imroL3hchsNL7tc&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    </script>
+</body>
+</html>
