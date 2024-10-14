@@ -17,17 +17,19 @@ exports.handler = async (event, context) => {
   }
 
   const data = JSON.parse(event.body);
-  console.log('Received Data:', data); // Debugging line
+
+  // Log the received data
+  console.log('Received data:', data);
 
   // Save to FaunaDB
   try {
-    await client.query(
+    const dbResponse = await client.query(
       q.Create(
-        q.Collection('bookings'),
+        q.Collection('bookings'), // Ensure this matches exactly with your collection name in FaunaDB
         { data }
       )
     );
-    console.log('Data saved to FaunaDB');
+    console.log('FaunaDB Response:', dbResponse);
   } catch (error) {
     console.error('FaunaDB Error:', error);
     return {
@@ -58,7 +60,8 @@ Address: ${data.address}`
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    const emailResponse = await transporter.sendMail(mailOptions);
+    console.log('Email Response:', emailResponse);
   } catch (error) {
     console.error('Nodemailer Error:', error);
     return {
