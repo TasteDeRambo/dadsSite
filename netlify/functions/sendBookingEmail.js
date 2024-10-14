@@ -1,7 +1,7 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
 const Busboy = require('busboy');
-const { promises: fs } = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 // FaunaDB client
@@ -19,7 +19,7 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const busboy = Busboy({ headers: { 'content-type': event.headers['content-type'] || event.headers['Content-Type'] } });
+  const busboy = new Busboy({ headers: { 'content-type': event.headers['content-type'] || event.headers['Content-Type'] } });
   const fields = {};
   const files = [];
 
