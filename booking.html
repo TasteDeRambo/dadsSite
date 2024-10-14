@@ -189,6 +189,10 @@ header, footer {
         const selectedDate = document.getElementById('selectedDate').value;
         const selectedTime = document.getElementById('selectedTime').value;
         const address = document.getElementById('address').value;
+        const type = document.getElementById('type').value;
+        const message = document.getElementById('message').value;
+        const images = [...document.getElementById('images').files].map(file => file.name);
+        const payment = document.getElementById('payment').value;
 
         // Check for required fields
         if (!name || !email || !phone || !selectedDate || !selectedTime || !address) {
@@ -213,7 +217,11 @@ header, footer {
             phone,
             selectedDate,
             selectedTime,
-            address
+            address, 
+            type, 
+            message,
+            images,
+            payment
         };
 
         console.log('Booking Data:', bookingData);
