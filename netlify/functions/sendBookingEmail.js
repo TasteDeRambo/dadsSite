@@ -1,6 +1,6 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
-const multiparty = require('multiparty');
+const formidable = require('formidable');
 
 // FaunaDB client
 const client = new faunadb.Client({
@@ -17,25 +17,29 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const form = new multiparty.Form();
+  const form = new formidable.IncomingForm();
+
   const formData = await new Promise((resolve, reject) => {
-    form.parse(event, (error, fields, files) => {
-      if (error) reject(error);
-      resolve({ fields, files });
+    form.parse(event, (err, fields, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ fields, files });
+      }
     });
   });
 
   const data = {
-    name: formData.fields.name[0],
-    email: formData.fields.email[0],
-    phone: formData.fields.phone[0],
-    selectedDate: formData.fields.selectedDate[0],
-    selectedTime: formData.fields.selectedTime[0],
-    address: formData.fields.address[0],
-    type: formData.fields.type[0],
-    message: formData.fields.message[0],
-    payment: formData.fields.payment[0],
-    images: formData.files.images || [] // Handle file uploads
+    name: formData.fields.name,
+    email: formData.fields.email,
+    phone: formData.fields.phone,
+    selectedDate: formData.fields.selectedDate,
+    selectedTime: formData.fields.selectedTime,
+    address: formData.fields.address,
+    type: formData.fields.type,
+    message: formData.fields.message,
+    payment: formData.fields.payment,
+    images: formData.files.images ? [].concat(formData.files.images) : [] // Handle single and multiple files
   };
 
   // Log the received data

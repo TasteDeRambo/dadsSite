@@ -9,7 +9,7 @@
     "dependencies": {
       "faunadb": "^4.0.1",
       "nodemailer": "^6.6.3",
-      "multiparty": "^4.2.2"
+      "formidable": "^3.5.1"
     },
     "author": "",
     "license": "ISC"
