@@ -19,7 +19,7 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const busboy = new Busboy({ headers: { 'content-type': event.headers['content-type'] || event.headers['Content-Type'] } });
+  const busboy = Busboy({ headers: { 'content-type': event.headers['content-type'] || event.headers['Content-Type'] } });
   const fields = {};
   const files = [];
 
@@ -33,7 +33,7 @@ exports.handler = async (event, context) => {
     fields[fieldname] = val;
   });
 
-  busboy.on('finish', () => {
+  busboy.on('finish', async () => {
     const data = {
       name: fields.name,
       email: fields.email,
@@ -51,33 +51,42 @@ exports.handler = async (event, context) => {
     console.log('Received data:', data);
 
     // Save to FaunaDB
-    client.query(
-      q.Create(
-        q.Collection('bookings'),
-        { data }
-      )
-    ).then(dbResponse => {
+    try {
+      const dbResponse = await client.query(
+        q.Create(
+          q.Collection('bookings'),
+          { data }
+        )
+      );
       console.log('FaunaDB Response:', dbResponse);
-      // Send email using Nodemailer
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
-      });
+    } catch (error) {
+      console.error('FaunaDB Error:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ success: false, error: 'Failed to save booking data' })
+      };
+    }
 
-      const attachments = data.images.map(image => ({
-        filename: image.filename,
-        path: image.path,
-        contentType: image.mimetype
-      }));
+    // Send email using Nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
 
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER,
-        subject: 'New Booking',
-        text: `Name: ${data.name}
+    const attachments = data.images.map(image => ({
+      filename: image.filename,
+      path: image.path,
+      contentType: image.mimetype
+    }));
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER,
+      subject: 'New Booking',
+      text: `Name: ${data.name}
 Email: ${data.email}
 Phone: ${data.phone}
 Date: ${data.selectedDate}
@@ -87,23 +96,24 @@ Service Type: ${data.type}
 Message: ${data.message}
 Payment Method: ${data.payment}
 Uploaded Images: ${data.images.map(image => image.filename).join(', ')}`,
-        attachments
-      };
+      attachments
+    };
 
-      return transporter.sendMail(mailOptions);
-    }).then(emailResponse => {
+    try {
+      const emailResponse = await transporter.sendMail(mailOptions);
       console.log('Email Response:', emailResponse);
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ success: true })
-      };
-    }).catch(error => {
-      console.error('Error:', error);
+    } catch (error) {
+      console.error('Nodemailer Error:', error);
       return {
         statusCode: 500,
-        body: JSON.stringify({ success: false, error: 'Failed to send email or save booking data' })
+        body: JSON.stringify({ success: false, error: 'Failed to send email' })
       };
-    });
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true })
+    };
   });
 
   busboy.end(Buffer.from(event.body, 'base64'));
