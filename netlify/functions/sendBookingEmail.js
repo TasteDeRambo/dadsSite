@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 
 // FaunaDB client
 const client = new faunadb.Client({
-  secret: process.env.FAUNA_SECRET
+  secret: 'fnAFttvm46AATTH_nt8F8dJ82exfYN5hgev1vSwW'
 });
 
 const q = faunadb.query;
