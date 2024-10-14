@@ -17,6 +17,7 @@ exports.handler = async (event, context) => {
   }
 
   const data = JSON.parse(event.body);
+  console.log('Received Data:', data); // Debugging line
 
   // Save to FaunaDB
   try {
@@ -26,6 +27,7 @@ exports.handler = async (event, context) => {
         { data }
       )
     );
+    console.log('Data saved to FaunaDB');
   } catch (error) {
     console.error('FaunaDB Error:', error);
     return {
