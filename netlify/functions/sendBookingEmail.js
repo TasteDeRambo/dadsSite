@@ -1,18 +1,18 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
-const AWS = require('aws-sdk');
-const busboy = require('busboy');
+const { S3 } = require('aws-sdk');
+const Busboy = require('busboy');
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
 // FaunaDB client
 const client = new faunadb.Client({
   secret: process.env.FAUNA_SECRET
 });
 
-const s3 = new AWS.S3();
-
 const q = faunadb.query;
+const s3 = new S3();
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
@@ -22,13 +22,15 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const busboy = new busboy({ headers: { 'content-type': event.headers['content-type'] || event.headers['Content-Type'] } });
+  const contentType = event.headers['content-type'] || event.headers['Content-Type'];
+  const busboy = new Busboy({ headers: { 'content-type': contentType } });
+
   const fields = {};
   const files = [];
   const uploads = [];
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    const saveTo = path.join('/tmp', path.basename(filename));
+    const saveTo = path.join('/tmp', `${uuidv4()}-${filename}`);
     const stream = fs.createWriteStream(saveTo);
     file.pipe(stream);
     files.push({ filename, path: saveTo, mimetype });
@@ -74,9 +76,6 @@ exports.handler = async (event, context) => {
         mimetype: file.mimetype
       }))
     };
-
-    // Log the received data
-    console.log('Received data:', data);
 
     // Save to FaunaDB
     try {
