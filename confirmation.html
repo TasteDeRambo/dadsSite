@@ -61,7 +61,7 @@
         document.getElementById("userName").textContent = bookingData.name;
         document.getElementById("appointmentDate").textContent = bookingData.selectedDate;
         document.getElementById("appointmentTime").textContent = bookingData.selectedTime;
-        document.getElementById("userContact").textContent = `${bookingData.email}, ${bookingData.phone}`;
+        document.getElementById("userContact").textContent = `${bookingData.email} and/or ${bookingData.phone}`;
 
         // Initialize Google Map with job location
         function initMap() {
