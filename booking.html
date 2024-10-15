@@ -6,100 +6,99 @@
     <title>Book a Service Appointment - Your Home Repair Business</title>
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: url('images/your-3d-image.jpg') no-repeat center center fixed;
-    background-size: cover;
-    color: #fff;
-}
-header, footer {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 1rem;
-    text-align: center;
-}
-.content {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-}
-.calendar-time-container {
-    display: flex;
-    justify-content: space-between;
-    flex: 1;
-    flex-wrap: wrap; /* Ensure responsive layout for mobile */
-}
-.calendar-section, .time-section, .details-section {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 1rem;
-    border-radius: 50px;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    margin-right: 1rem;
-}
-.details-section {
-    margin-right: 0;
-    margin-top: 20px; /* Added spacing */
-}
-.booking-form input, .booking-form textarea, .booking-form select {
-    display: block;
-    width: 100%;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-}
-.booking-form input:hover, .booking-form textarea:hover, .booking-form select:hover {
-    background-color: #ccc;
-    color: #000;
-}
-.calendar-section button, .time-section button {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 50%; /* Circular buttons */
-    padding: 10px 15px;
-    margin: 2px;
-    cursor: pointer;
-}
-.calendar-section button:hover, .time-section button:hover {
-    background-color: #ccc;
-    color: #000;
-}
-.calendar-section .selected, .time-section .selected {
-    background-color: #f39c12;
-    color: #000;
-}
-.month-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #333;
-    border-radius: 50px;
-}
-.month-navigation button {
-    background-color: #333;
-    border: none;
-    border-radius: 50%;
-    padding: 10px;
-    cursor: pointer;
-    color: #fff;
-}
-.month-navigation button:hover {
-    background-color: #ccc;
-    color: #000;
-}
-.map-container {
-    width: 100%;
-    height: 400px;
-    margin-bottom: 1rem;
-}
-
-    </style>  
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('images/house2.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        header, footer {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            text-align: center;
+        }
+        .content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .calendar-time-container {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+            flex-wrap: wrap; /* Ensure responsive layout for mobile */
+        }
+        .calendar-section, .time-section, .details-section {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            margin-right: 1rem;
+        }
+        .details-section {
+            margin-right: 0;
+            margin-top: 20px; /* Added spacing */
+        }
+        .booking-form input, .booking-form textarea, .booking-form select {
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+        }
+        .booking-form input:hover, .booking-form textarea:hover, .booking-form select:hover {
+            background-color: #ccc;
+            color: #000;
+        }
+        .calendar-section button, .time-section button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 50%; /* Circular buttons */
+            padding: 10px 15px;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .calendar-section button:hover, .time-section button:hover {
+            background-color: #ccc;
+            color: #000;
+        }
+        .calendar-section .selected, .time-section .selected {
+            background-color: #f39c12;
+            color: #000;
+        }
+        .month-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 50px;
+        }
+        .month-navigation button {
+            background-color: #333;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            color: #fff;
+        }
+        .month-navigation button:hover {
+            background-color: #ccc;
+            color: #000;
+        }
+        .map-container {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -153,8 +152,8 @@ header, footer {
                 </select>
                 <label for="message">Message:</label>
                 <textarea id="message" name="message"></textarea>
-                <label for="images">Upload Images (optional):</label>
-                <input type="file" id="images" name="images" accept="image/*" multiple>
+                <label for="images">Images:</label>
+                <textarea class="non-editable-textarea" readonly>For images of the job, send them to hidrogo93@gmail.com or text them to (214) 735-7429</textarea>
                 <label for="payment">Payment Method:</label>
                 <select id="payment" name="payment">
                     <option value="zelle">Zelle</option>
@@ -168,7 +167,7 @@ header, footer {
         </div>
     </div>
     <footer>
-        <p>&copy; 2024 Your Home Repair Business</p>
+        <p>&copy; 2024 Cruz Home Repair Business</p>
     </footer>
 </body>
     <script>
@@ -191,7 +190,6 @@ header, footer {
         const address = document.getElementById('address').value;
         const type = document.getElementById('type').value;
         const message = document.getElementById('message').value;
-        const images = [...document.getElementById('images').files].map(file => file.name);
         const payment = document.getElementById('payment').value;
 
         // Check for required fields
@@ -207,7 +205,10 @@ header, footer {
             phone,
             selectedDate,
             selectedTime,
-            address
+            address,
+            type,
+            message,
+            payment
         }));
 
         // Prepare data to be sent to Netlify function
@@ -217,14 +218,11 @@ header, footer {
             phone,
             selectedDate,
             selectedTime,
-            address, 
-            type, 
+            address,
+            type,
             message,
-            images,
             payment
         };
-
-        console.log('Booking Data:', bookingData);
 
         fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
             method: 'POST',
