@@ -1,6 +1,6 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
-const Busboy = require('busboy');
+const formidable = require('formidable');
 const { Readable } = require('stream');
 
 // FaunaDB client
@@ -8,7 +8,7 @@ const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET });
 const q = faunadb.query;
 
 exports.handler = async (event) => {
-  const busboy = new Busboy({ headers: event.headers });
+  const form = new formidable.IncomingForm();
 
   if (event.httpMethod !== 'POST') {
     return {
@@ -18,29 +18,15 @@ exports.handler = async (event) => {
   }
 
   return new Promise((resolve, reject) => {
-    const fields = {};
-    const files = [];
-
-    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-      const buffer = [];
-      file.on('data', (data) => {
-        buffer.push(data);
-      }).on('end', () => {
-        files.push({
-          fieldname,
-          originalFilename: filename,
-          encoding,
-          mimetype,
-          buffer: Buffer.concat(buffer)
+    form.parse(event, async (err, fields, files) => {
+      if (err) {
+        console.error('Form parse error:', err);
+        resolve({
+          statusCode: 500,
+          body: JSON.stringify({ success: false, error: 'Failed to parse form data' })
         });
-      });
-    });
-
-    busboy.on('field', (fieldname, val) => {
-      fields[fieldname] = val;
-    });
-
-    busboy.on('finish', async () => {
+        return;
+      }
       // Log the received data
       console.log('Received data:', fields);
 
@@ -75,10 +61,10 @@ exports.handler = async (event) => {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_USER,
         subject: 'New Booking',
-        text: `Name: ${fields.name}\nEmail: ${fields.email}\nPhone: ${fields.phone}\nDate: ${fields.selectedDate}\nTime: ${fields.selectedTime}\nAddress: ${fields.address}\nService Type: ${fields.type}\nMessage: ${fields.message}\nPayment Method: ${fields.payment}\nUploaded Images: ${files.length > 0 ? files.map(file => file.originalFilename).join(', ') : 'None'}`,
-        attachments: files.map(file => ({
-          filename: file.originalFilename,
-          content: file.buffer
+        text: `Name: ${fields.name}\nEmail: ${fields.email}\nPhone: ${fields.phone}\nDate: ${fields.selectedDate}\nTime: ${fields.selectedTime}\nAddress: ${fields.address}\nService Type: ${fields.type}\nMessage: ${fields.message}\nPayment Method: ${fields.payment}\nUploaded Images: ${Object.keys(files).length > 0 ? Object.keys(files).map(key => files[key].name).join(', ') : 'None'}`,
+        attachments: Object.keys(files).map(key => ({
+          filename: files[key].name,
+          content: files[key].content
         }))
       };
 
@@ -97,7 +83,5 @@ exports.handler = async (event) => {
         });
       }
     });
-
-    busboy.end(Buffer.from(event.body, 'base64'));
   });
 };
