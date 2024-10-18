@@ -8,8 +8,6 @@ const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET });
 const q = faunadb.query;
 
 exports.handler = async (event) => {
-  const form = new formidable.IncomingForm();
-
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -17,8 +15,16 @@ exports.handler = async (event) => {
     };
   }
 
+  const form = new formidable.IncomingForm();
+
+  // Create a stream from the event body
+  const stream = new Readable();
+  stream._read = () => {}; // No-op
+  stream.push(Buffer.from(event.body, 'base64'));
+  stream.push(null);
+
   return new Promise((resolve, reject) => {
-    form.parse(event, async (err, fields, files) => {
+    form.parse(stream, async (err, fields, files) => {
       if (err) {
         console.error('Form parse error:', err);
         resolve({
@@ -27,6 +33,7 @@ exports.handler = async (event) => {
         });
         return;
       }
+
       // Log the received data
       console.log('Received data:', fields);
 
