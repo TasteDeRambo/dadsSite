@@ -23,8 +23,14 @@ exports.handler = async (event) => {
   stream.push(Buffer.from(event.body, 'base64'));
   stream.push(null);
 
+  // Add content-length header manually
+  const headers = {
+    ...event.headers,
+    'content-length': Buffer.from(event.body, 'base64').length
+  };
+
   return new Promise((resolve, reject) => {
-    form.parse(stream, async (err, fields, files) => {
+    form.parse({ headers, stream }, async (err, fields, files) => {
       if (err) {
         console.error('Form parse error:', err);
         resolve({
