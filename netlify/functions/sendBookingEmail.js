@@ -1,6 +1,7 @@
 const faunadb = require('faunadb');
 const nodemailer = require('nodemailer');
-const multiparty = require('multiparty');
+const Busboy = require('busboy');
+const { Readable } = require('stream');
 
 // FaunaDB client
 const client = new faunadb.Client({
@@ -16,27 +17,40 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const form = new multiparty.Form();
-
   return new Promise((resolve, reject) => {
-    form.parse(event, async (err, fields, files) => {
-      if (err) {
-        reject({ statusCode: 500, body: 'Failed to parse form' });
-        return;
-      }
+    const busboy = new Busboy({ headers: event.headers });
+    const fields = {};
+    const files = [];
 
-      const data = fields;
-      const images = files.images;
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+      const buffer = [];
+      file.on('data', (data) => {
+        buffer.push(data);
+      }).on('end', () => {
+        files.push({
+          fieldname,
+          originalFilename: filename,
+          encoding,
+          mimetype,
+          buffer: Buffer.concat(buffer)
+        });
+      });
+    });
 
+    busboy.on('field', (fieldname, val) => {
+      fields[fieldname] = val;
+    });
+
+    busboy.on('finish', async () => {
       // Log the received data
-      console.log('Received data:', data);
+      console.log('Received data:', fields);
 
       // Save to FaunaDB
       try {
         const dbResponse = await client.query(
           q.Create(
             q.Collection('bookings'), // Ensure this matches your collection name exactly
-            { data }
+            { data: fields }
           )
         );
         console.log('FaunaDB Response:', dbResponse);
@@ -62,10 +76,10 @@ exports.handler = async (event, context) => {
         from: process.env.EMAIL_USER,
         to: process.env.EMAIL_USER,
         subject: 'New Booking',
-        text: `Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nDate: ${data.selectedDate}\nTime: ${data.selectedTime}\nAddress: ${data.address}\nService Type: ${data.type}\nMessage: ${data.message}\nPayment Method: ${data.payment}\nUploaded Images: ${images ? images.map(file => file.originalFilename).join(', ') : 'None'}`,
-        attachments: images.map(file => ({
+        text: `Name: ${fields.name}\nEmail: ${fields.email}\nPhone: ${fields.phone}\nDate: ${fields.selectedDate}\nTime: ${fields.selectedTime}\nAddress: ${fields.address}\nService Type: ${fields.type}\nMessage: ${fields.message}\nPayment Method: ${fields.payment}\nUploaded Images: ${files.length > 0 ? files.map(file => file.originalFilename).join(', ') : 'None'}`,
+        attachments: files.map(file => ({
           filename: file.originalFilename,
-          path: file.path
+          content: file.buffer
         }))
       };
 
@@ -84,5 +98,7 @@ exports.handler = async (event, context) => {
         });
       }
     });
+
+    busboy.end(Buffer.from(event.body, 'base64'));
   });
 };
