@@ -4,12 +4,12 @@ const Busboy = require('busboy');
 const { Readable } = require('stream');
 
 // FaunaDB client
-const client = new faunadb.Client({
-  secret: process.env.FAUNA_SECRET
-});
+const client = new faunadb.Client({ secret: process.env.FAUNA_SECRET });
 const q = faunadb.query;
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
+  const busboy = new Busboy({ headers: event.headers });
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -18,7 +18,6 @@ exports.handler = async (event, context) => {
   }
 
   return new Promise((resolve, reject) => {
-    const busboy = new Busboy({ headers: event.headers });
     const fields = {};
     const files = [];
 
