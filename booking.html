@@ -153,7 +153,7 @@
                 <label for="message">Description:</label>
                 <textarea id="message" name="message"></textarea>
                 <label for="images">Images:</label>
-                <input type="file" id="images" name="images" multiple>
+                <textarea class="non-editable-textarea" readonly>For images of the job, send them to hidrogo93@gmail.com or text them to (214) 735-7429</textarea>
                 <label for="payment">Payment Method:</label>
                 <select id="payment" name="payment">
                     <option value="zelle">Zelle</option>
@@ -171,30 +171,66 @@
         <p>&copy; 2024 Cruz Home Repair Business</p>
     </footer>
 </body>
-<script>
-    // Updated calendar setup
-    const calendar = document.getElementById('calendar');
-    const currentDate = new Date();
-    const selectedDateField = document.getElementById('selectedDate');
-    let selectedMonth = currentDate.getMonth();
-    let selectedYear = currentDate.getFullYear();
+    <script>
+        // Updated calendar setup
+        const calendar = document.getElementById('calendar');
+        const currentDate = new Date();
+        const selectedDateField = document.getElementById('selectedDate');
+        let selectedMonth = currentDate.getMonth();
+        let selectedYear = currentDate.getFullYear();
 
-    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
         e.preventDefault(); // Prevent form submission
-        
+
         // Get form data
-        const formData = new FormData(document.getElementById('bookingForm'));
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const selectedDate = document.getElementById('selectedDate').value;
+        const selectedTime = document.getElementById('selectedTime').value;
+        const address = document.getElementById('address').value;
+        const type = document.getElementById('type').value;
+        const message = document.getElementById('message').value;
+        const payment = document.getElementById('payment').value;
 
         // Check for required fields
-        if (!formData.get('name') || !formData.get('email') || !formData.get('phone') || !formData.get('selectedDate') || !formData.get('selectedTime') || !formData.get('address')) {
+        if (!name || !email || !phone || !selectedDate || !selectedTime || !address) {
             alert('Please fill in all required fields.');
             return;
         }
 
+        // Store data in local storage
+        localStorage.setItem('bookingData', JSON.stringify({
+            name,
+            email,
+            phone,
+            selectedDate,
+            selectedTime,
+            address,
+            type,
+            message,
+            payment
+        }));
+
         // Prepare data to be sent to Netlify function
+        const bookingData = {
+            name,
+            email,
+            phone,
+            selectedDate,
+            selectedTime,
+            address,
+            type,
+            message,
+            payment
+        };
+
         fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
         })
         .then(response => {
             console.log('Server Response:', response);
@@ -211,118 +247,126 @@
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Fai1ed to send booking data. Please try again.');
+            alert('Failed to send booking data. Please try again.');
         });
     });
 
-    function renderCalendar(month, year) {
-        calendar.innerHTML = '';
-        const date = new Date(year, month, 1);
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const firstDayIndex = date.getDay();
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June', 
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
+        function renderCalendar(month, year) {
+            calendar.innerHTML = '';
+            const date = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDayIndex = date.getDay();
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June', 
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
 
-        let table = '<div class="month-navigation">';
-        table += `<button onclick="prevMonth()">&lt;</button>`;
-        table += `<div>${months[month]} ${year}</div>`;
-        table += `<button onclick="nextMonth()">&gt;</button>`;
-        table += '</div>';
-        table += '<div>';
+            let table = '<div class="month-navigation">';
+            table += `<button onclick="prevMonth()">&lt;</button>`;
+            table += `<div>${months[month]} ${year}</div>`;
+            table += `<button onclick="nextMonth()">&gt;</button>`;
+            table += '</div>';
+            table += '<div>';
+            
+            for (let i = 0; i < firstDayIndex; i++) {
+                table += '<button disabled></button>';
+            }
 
-        for (let i = 0; i < firstDayIndex; i++) {
-            table += '<button disabled></button>';
+            for (let day = 1; day <= daysInMonth; day++) {
+                table += `<button onclick="selectDate(${day}, ${month}, ${year})">${day}</button>`;
+            }
+            
+            table += '</div>';
+            calendar.innerHTML = table;
         }
-        for (let day = 1; day <= daysInMonth; day++) {
-            table += `<button onclick="selectDate(${day}, ${month}, ${year})">${day}</button>`;
+
+        function selectDate(day, month, year) {
+            const selectedDate = new Date(year, month, day);
+            selectedDateField.value = selectedDate.toISOString().split('T')[0];
+            // Highlight selected date
+            document.querySelectorAll('.calendar-section button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
         }
 
-        table += '</div>';
-        calendar.innerHTML = table;
-    }
-
-    function selectDate(day, month, year) {
-        const selectedDate = new Date(year, month, day);
-        selectedDateField.value = selectedDate.toISOString().split('T')[0];
-
-        // Highlight selected date
-        document.querySelectorAll('.calendar-section button').forEach(btn => {
-            btn.classList.remove('selected');
-        });
-        event.target.classList.add('selected');
-    }
-
-    function prevMonth() {
-        if (selectedMonth === 0) {
-            selectedMonth = 11;
-            selectedYear--;
-        } else {
-            selectedMonth--;
-        }
-        renderCalendar(selectedMonth, selectedYear);
-    }
-
-    function nextMonth() {
-        if (selectedMonth === 11) {
-            selectedMonth = 0;
-            selectedYear++;
-        } else {
-            selectedMonth++;
-        }
-        renderCalendar(selectedMonth, selectedYear);
-    }
-
-    renderCalendar(selectedMonth, selectedYear);
-
-    // Time selection
-    const timeButtons = document.querySelectorAll('.time-section button');
-    const selectedTimeField = document.getElementById('selectedTime');
-
-    timeButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            selectedTimeField.value = button.innerText;
-
-            // Highlight selected time
-            timeButtons.forEach(btn => btn.classList.remove('selected'));
-            button.classList.add('selected');
-        });
-    });
-
-    // Google Maps setup
-    function initMap() {
-        const map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: { lat: -34.397, lng: 150.644 }
-        });
-        const geocoder = new google.maps.Geocoder();
-        document.getElementById('address').addEventListener('change', () => {
-            geocodeAddress(geocoder, map);
-        });
-    }
-
-    function geocodeAddress(geocoder, resultsMap) {
-        const address = document.getElementById('address').value;
-        geocoder.geocode({ address: address }, (results, status) => {
-            if (status === 'OK') {
-                resultsMap.setCenter(results[0].geometry.location);
-                new google.maps.Marker({
-                    map: resultsMap,
-                    position: results[0].geometry.location
-                });
+        function prevMonth() {
+            if (selectedMonth === 0) {
+                selectedMonth = 11;
+                selectedYear--;
             } else {
-                alert('Geocode was not successful for the following reason: ' + status);
+                selectedMonth--;
+            }
+            renderCalendar(selectedMonth, selectedYear);
+        }
+
+        function nextMonth() {
+            if (selectedMonth === 11) {
+                selectedMonth = 0;
+                selectedYear++;
+            } else {
+                selectedMonth++;
+            }
+            renderCalendar(selectedMonth, selectedYear);
+        }
+
+        renderCalendar(selectedMonth, selectedYear);
+
+        // Time selection
+        const timeButtons = document.querySelectorAll('.time-section button');
+        const selectedTimeField = document.getElementById('selectedTime');
+
+        timeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                selectedTimeField.value = button.innerText;
+                // Highlight selected time
+                timeButtons.forEach(btn => btn.classList.remove('selected'));
+                button.classList.add('selected');
+            });
+        });
+
+        // Form submission
+        const form = document.getElementById('bookingForm');
+        form.addEventListener('submit', (e) => {
+            if (!selectedDateField.value || !selectedTimeField.value) {
+                alert('Please select both a date and a time.');
+                e.preventDefault();
             }
         });
-    }
 
-    // Load the Google Maps API script
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3WxQ8TyNHHUJIxu6imroL3hchsNL7tc&callback=initMap`;
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-</script>
+        // Google Maps setup
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: { lat: -34.397, lng: 150.644 }
+            });
+            const geocoder = new google.maps.Geocoder();
+            document.getElementById('address').addEventListener('change', () => {
+                geocodeAddress(geocoder, map);
+            });
+        }
+
+        function geocodeAddress(geocoder, resultsMap) {
+            const address = document.getElementById('address').value;
+            geocoder.geocode({ address: address }, (results, status) => {
+                if (status === 'OK') {
+                    resultsMap.setCenter(results[0].geometry.location);
+                    new google.maps.Marker({
+                        map: resultsMap,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        // Load the Google Maps API script
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3WxQ8TyNHHUJIxu6imroL3hchsNL7tc&callback=initMap`;
+        script.async = true;
+        script.defer = true
+        document.head.appendChild(script);
+    </script>
 </body>
 </html>

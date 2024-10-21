@@ -1,16 +1,14 @@
 {
   "name": "dads-site",
   "version": "1.0.0",
-  "description": "A project for Dad's site",
+  "description": "Home repair booking site",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "netlify dev"
   },
   "dependencies": {
-    "faunadb": "^4.4.1",
-    "nodemailer": "^6.6.3",
-    "busboy": "^1.6.0",
-    "formidable": "^2.0.0"
+    "faunadb": "^4.0.1",
+    "nodemailer": "^6.6.3"
   },
   "author": "",
   "license": "ISC"
