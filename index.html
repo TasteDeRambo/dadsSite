@@ -44,24 +44,27 @@
             padding: 0.5rem 1rem;
             cursor: pointer;
         }
+        .lang-btn {
+            margin: 1rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Cruz Home Repair Business</h1>
-        <p>Interior & Exterior Home Repairs</p>
+        <h1 id="header-title">Cruz Home Repair Business</h1>
+        <p id="header-subtitle">Interior & Exterior Home Repairs</p>
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+        <button class="lang-btn" onclick="setLanguage('es')">Español</button>
     </header>
     <nav>
-        <a href="booking.html">Book an Appointment</a>
+        <a id="booking-link" href="booking.html">Book an Appointment</a>
     </nav>
     <div class="content">
         <section id="about">
             <h2>About Us</h2>
-            <p>Welcome to Cruz Home Repair Business! I</p>
-            <p>specialize in interior and exterior home</p>
-            <p>repairs. I am a professional who is</p>
-            <p>dedicated to providing top-quality service and</p>
-            <p>customer satisfaction.</p>
+            <p id="about-text">Welcome to Cruz Home Repair Business! I specialize in interior and exterior home repairs. I am a professional who is dedicated to providing top-quality service and customer satisfaction.</p>
         </section>
         <section id="services">
             <h2>My Services</h2>
@@ -69,28 +72,53 @@
                 <img src="images/drywall.png" alt="Interior Service">
                 <div>
                     <h3>Interior Repairs</h3>
-                    <p>Expert repairs for all your interior needs.</p>
-                    <button onclick="location.href='booking.html'">Book Now</button>
+                    <p id="interior-service-text">Expert repairs for all your interior needs.</p>
+                    <button id="book-now-interior" onclick="location.href='booking.html'">Book Now</button>
                 </div>
             </div>
             <div class="service">
                 <img src="images/damagedShingles.png" alt="Exterior Service">
                 <div>
                     <h3>Exterior Repairs</h3>
-                    <p>Expert exterior repair services.</p>
-                    <button onclick="location.href='booking.html'">Book Now</button>
+                    <p id="exterior-service-text">Expert exterior repair services.</p>
+                    <button id="book-now-exterior" onclick="location.href='booking.html'">Book Now</button>
                 </div>
             </div>
         </section>
         <section id="contact">
             <h2>Contact Us</h2>
-            <p>Phone: 214-735-7429  Spanish</dp>
-            <p>Email: hidrogo93@gmail.com   Spanish</p>
-            <p>Email: kevalcantara2005@gmail.com   English</p>
+            <p id="phone">Phone: 214-735-7429</p>
+            <p id="email-spanish">Email: hidrogo93@gmail.com  (Español)</p>
+            <p id="email-english">Email: kevalcantara2005@gmail.com  (English)</p>
         </section>
     </div>
     <footer>
         <p>&copy; 2024 Cruz Home Repair Business</p>
     </footer>
+    <script>
+        function setLanguage(lang) {
+            if (lang === 'es') {
+                document.getElementById('header-title').textContent = 'Negocio de Reparaciones del Hogar Cruz';
+                document.getElementById('header-subtitle').textContent = 'Reparaciones de Interiores y Exteriores del Hogar';
+                document.getElementById('booking-link').textContent = 'Reservar una Cita';
+                document.getElementById('about-text').textContent = '¡Bienvenido a Cruz Home Repair Business! Me especializo en reparaciones interiores y exteriores del hogar. Soy un profesional dedicado a brindar un servicio de alta calidad y satisfacción del cliente.';
+                document.getElementById('interior-service-text').textContent = 'Reparaciones expertas para todas tus necesidades interiores.';
+                document.getElementById('book-now-interior').textContent = 'Reservar Ahora';
+                document.getElementById('exterior-service-text').textContent = 'Servicios expertos de reparación exterior.';
+                document.getElementById('book-now-exterior').textContent = 'Reservar Ahora';
+                document.getElementById('phone').textContent = 'Teléfono: 214-735-7429';
+            } else {
+                document.getElementById('header-title').textContent = 'Cruz Home Repair Business';
+                document.getElementById('header-subtitle').textContent = 'Interior & Exterior Home Repairs';
+                document.getElementById('booking-link').textContent = 'Book an Appointment';
+                document.getElementById('about-text').textContent = 'Welcome to Cruz Home Repair Business! I specialize in interior and exterior home repairs. I am a professional who is dedicated to providing top-quality service and customer satisfaction.';
+                document.getElementById('interior-service-text').textContent = 'Expert repairs for all your interior needs.';
+                document.getElementById('book-now-interior').textContent = 'Book Now';
+                document.getElementById('exterior-service-text').textContent = 'Expert exterior repair services.';
+                document.getElementById('book-now-exterior').textContent = 'Book Now';
+                document.getElementById('phone').textContent = 'Phone: 214-735-7429';
+            }
+        }
+    </script>
 </body>
 </html>
