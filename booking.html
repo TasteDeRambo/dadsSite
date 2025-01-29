@@ -1,372 +1,244 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book a Service Appointment - Your Home Repair Business</title>
+    <meta name="description" content="Book a Service Appointment - Cruz Home Repair">
+    <title>Book a Service Appointment - Cruz Home Repair</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
             padding: 0;
-            background: url('images/house2.png') no-repeat center center fixed;
-            background-size: cover;
-            color: #fff;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
-        header, footer {
-            background-color: rgba(0, 0, 0, 0.8);
+        body {
+            color: #333;
+            background-color: #f5f5f5;
+        }
+        nav {
+            background-color: #333;
             padding: 1rem;
             text-align: center;
         }
-        .content {
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
             padding: 2rem;
-            display: flex;
-            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-        .calendar-time-container {
-            display: flex;
-            justify-content: space-between;
-            flex: 1;
-            flex-wrap: wrap; /* Ensure responsive layout for mobile */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
         }
-        .calendar-section, .time-section, .details-section {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 1rem;
-            border-radius: 50px;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            margin-right: 1rem;
+        .form-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
-        .details-section {
-            margin-right: 0;
-            margin-top: 20px; /* Added spacing */
+        .card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .booking-form input, .booking-form textarea, .booking-form select {
-            display: block;
+        .booking-form input, .booking-form select, .booking-form textarea {
             width: 100%;
-            margin-bottom: 1rem;
             padding: 0.5rem;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 50px;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-        .booking-form input:hover, .booking-form textarea:hover, .booking-form select:hover {
-            background-color: #ccc;
-            color: #000;
-        }
-        .calendar-section button, .time-section button {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            border-radius: 50%; /* Circular buttons */
-            padding: 10px 15px;
-            margin: 2px;
-            cursor: pointer;
-        }
-        .calendar-section button:hover, .time-section button:hover {
-            background-color: #ccc;
-            color: #000;
-        }
-        .calendar-section .selected, .time-section .selected {
-            background-color: #f39c12;
-            color: #000;
-        }
-        .month-navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #333;
-            border-radius: 50px;
-        }
-        .month-navigation button {
-            background-color: #333;
-            border: none;
-            border-radius: 50%;
-            padding: 10px;
-            cursor: pointer;
-            color: #fff;
-        }
-        .month-navigation button:hover {
-            background-color: #ccc;
-            color: #000;
-        }
-        .map-container {
+        button {
             width: 100%;
-            height: 400px;
-            margin-bottom: 1rem;
+            padding: 1rem;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 1rem;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Book a Service Appointment</h1>
-        <p>Interior & Exterior Home Repairs</p>
-    </header>
-    <div class="content">
-        <div class="calendar-time-container">
-            <div class="calendar-section">
-                <h2>Select a Date</h2>
-                <div id="calendar"></div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+    </nav>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Book a Service Appointment</h1>
+            <p>Interior & Exterior Home Repairs</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="card">
+                <h2>Select a Date & Time</h2>
+                <input type="date" id="selectedDate" required>
+                <select id="selectedTime" required>
+                    <option value="">Select Time</option>
+                    <option>8:00 AM</option>
+                    <option>9:00 AM</option>
+                    <option>10:00 AM</option>
+                    <option>11:00 AM</option>
+                    <option>1:00 PM</option>
+                    <option>2:00 PM</option>
+                    <option>3:00 PM</option>
+                </select>
             </div>
-            <div class="time-section">
-                <h2>Select a Time</h2>
-                <div class="time-buttons">
-                    <button>6:00 AM</button>
-                    <button>6:30 AM</button>
-                    <button>7:00 AM</button>
-                    <button>7:30 AM</button>
-                    <button>8:00 AM</button>
-                    <button>8:30 AM</button>
-                    <button>9:00 AM</button>
-                    <button>9:30 AM</button>
-                    <button>10:00 AM</button>
-                    <button>10:30 AM</button>
-                    <button>11:00 AM</button>
-                    <button>11:30 AM</button>
-                    <button>12:00 PM</button>
-                    <button>12:30 PM</button>
-                    <button>1:00 PM</button>
-                    <button>1:30 PM</button>
-                    <button>2:00 PM</button>
-                </div>
+            
+            <div class="card">
+                <h2>Contact Details</h2>
+                <form class="booking-form" id="bookingForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" autocomplete="name" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" autocomplete="email" required>
+                    <label for="phone">Phone:</label>
+                    <input type="tel" id="phone" autocomplete="tel">
+                    <label for="address">Job Location:</label>
+                    <input type="text" id="address" autocomplete="street-address" required>
+                </form>
             </div>
         </div>
-        <div class="details-section">
+        
+        <div class="card" style="margin-top:2rem;">
             <h2>Service Details</h2>
-            <form class="booking-form" id="bookingForm">
-                <input type="hidden" id="selectedDate" name="selectedDate" required>
-                <input type="hidden" id="selectedTime" name="selectedTime" required>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
-                <label for="phone">Phone:</label>
-                <input type="tel" id="phone" name="phone" required>
+            <form id="bookingForm">
                 <label for="type">Service Type:</label>
-                <select id="type" name="type">
-                    <option value="interior">Interior Repairs</option>
-                    <option value="exterior">Exterior Repairs</option>
+                <select id="type">
+                    <option>Interior Repairs</option>
+                    <option>Exterior Repairs</option>
+                </select>
+                <label for ="payment">Payment Method:</label>
+                <select id="payment">
+                    <option>Cash</option>
+                    <option>Zelle</option>
+                    <option>Check</option>
                 </select>
                 <label for="message">Description:</label>
-                <textarea id="message" name="message"></textarea>
-                <label for="images">Images:</label>
-                <textarea class="non-editable-textarea" readonly>For images of the job, send them to hidrogo93@gmail.com or text them to (214) 735-7429</textarea>
-                <label for="payment">Payment Method:</label>
-                <select id="payment" name="payment">
-                    <option value="zelle">Zelle</option>
-                    <option value="cash">Cash</option>
-                    <option value="check">Check</option>
-                </select>
-                <label for="address">Job Location:</label>
-                <input type="text" id="address" name="address" required>
-                <div id="map" class="map-container"></div>
-                <button type="submit">Get a Quote</button>
+                <textarea id="message" style="width: 278px; height: 50px; resize: none;"></textarea>
+                <button type="submit" id="submitBooking">Get a Quote</button>
             </form>
         </div>
     </div>
+    
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popup" id="popupMessage"></div>
+    
     <footer>
-        <p>&copy; 2024 Cruz Home Repair Business</p>
+        <p>&copy; 2025 Cruz Home Repair. All rights reserved.</p>
     </footer>
-</body>
+
     <script>
-        // Updated calendar setup
-        const calendar = document.getElementById('calendar');
-        const currentDate = new Date();
-        const selectedDateField = document.getElementById('selectedDate');
-        let selectedMonth = currentDate.getMonth();
-        let selectedYear = currentDate.getFullYear();
-
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent form submission
-
-        // Get form data
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const selectedDate = document.getElementById('selectedDate').value;
-        const selectedTime = document.getElementById('selectedTime').value;
-        const address = document.getElementById('address').value;
-        const type = document.getElementById('type').value;
-        const message = document.getElementById('message').value;
-        const payment = document.getElementById('payment').value;
-
-        // Check for required fields
-        if (!name || !email || !phone || !selectedDate || !selectedTime || !address) {
-            alert('Please fill in all required fields.');
-            return;
-        }
-
-        // Store data in local storage
-        localStorage.setItem('bookingData', JSON.stringify({
-            name,
-            email,
-            phone,
-            selectedDate,
-            selectedTime,
-            address,
-            type,
-            message,
-            payment
-        }));
-
-        // Prepare data to be sent to Netlify function
-        const bookingData = {
-            name,
-            email,
-            phone,
-            selectedDate,
-            selectedTime,
-            address,
-            type,
-            message,
-            payment
-        };
-
-        fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(bookingData)
-        })
-        .then(response => {
-            console.log('Server Response:', response);
-            return response.json();
-        })
-        .then(data => {
-            console.log('Response Data:', data);
-            if (data.success) {
-                // Redirect to confirmation page
-                window.location.href = 'confirmation.html';
-            } else {
-                alert('Failed to send booking data. Please try again.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Failed to send booking data. Please try again.');
-        });
-    });
-
-        function renderCalendar(month, year) {
-            calendar.innerHTML = '';
-            const date = new Date(year, month, 1);
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const firstDayIndex = date.getDay();
-            const months = [
-                'January', 'February', 'March', 'April', 'May', 'June', 
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ];
-
-            let table = '<div class="month-navigation">';
-            table += `<button onclick="prevMonth()">&lt;</button>`;
-            table += `<div>${months[month]} ${year}</div>`;
-            table += `<button onclick="nextMonth()">&gt;</button>`;
-            table += '</div>';
-            table += '<div>';
-            
-            for (let i = 0; i < firstDayIndex; i++) {
-                table += '<button disabled></button>';
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                table += `<button onclick="selectDate(${day}, ${month}, ${year})">${day}</button>`;
-            }
-            
-            table += '</div>';
-            calendar.innerHTML = table;
-        }
-
-        function selectDate(day, month, year) {
-            const selectedDate = new Date(year, month, day);
-            selectedDateField.value = selectedDate.toISOString().split('T')[0];
-            // Highlight selected date
-            document.querySelectorAll('.calendar-section button').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-        }
-
-        function prevMonth() {
-            if (selectedMonth === 0) {
-                selectedMonth = 11;
-                selectedYear--;
-            } else {
-                selectedMonth--;
-            }
-            renderCalendar(selectedMonth, selectedYear);
-        }
-
-        function nextMonth() {
-            if (selectedMonth === 11) {
-                selectedMonth = 0;
-                selectedYear++;
-            } else {
-                selectedMonth++;
-            }
-            renderCalendar(selectedMonth, selectedYear);
-        }
-
-        renderCalendar(selectedMonth, selectedYear);
-
-        // Time selection
-        const timeButtons = document.querySelectorAll('.time-section button');
-        const selectedTimeField = document.getElementById('selectedTime');
-
-        timeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                selectedTimeField.value = button.innerText;
-                // Highlight selected time
-                timeButtons.forEach(btn => btn.classList.remove('selected'));
-                button.classList.add('selected');
-            });
-        });
-
-        // Form submission
-        const form = document.getElementById('bookingForm');
-        form.addEventListener('submit', (e) => {
-            if (!selectedDateField.value || !selectedTimeField.value) {
-                alert('Please select both a date and a time.');
-                e.preventDefault();
-            }
-        });
-
-        // Google Maps setup
-        function initMap() {
-            const map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: { lat: -34.397, lng: 150.644 }
-            });
-            const geocoder = new google.maps.Geocoder();
-            document.getElementById('address').addEventListener('change', () => {
-                geocodeAddress(geocoder, map);
-            });
-        }
-
-        function geocodeAddress(geocoder, resultsMap) {
-            const address = document.getElementById('address').value;
-            geocoder.geocode({ address: address }, (results, status) => {
-                if (status === 'OK') {
-                    resultsMap.setCenter(results[0].geometry.location);
-                    new google.maps.Marker({
-                        map: resultsMap,
-                        position: results[0].geometry.location
-                    });
-                } else {
-                    alert('Geocode was not successful for the following reason: ' + status);
+        let hasMissingFields = true;
+        document.getElementById("submitBooking").addEventListener("click", function(event) {
+            event.preventDefault();
+            let missingFields = [];
+            ["name", "phone", "selectedDate", "selectedTime", "address"].forEach(field => {
+                if (!document.getElementById(field).value) {
+                    missingFields.push(field.charAt(0).toUpperCase() + field.slice(1));
                 }
             });
-        }
+            if (missingFields.length > 0) {
+                document.getElementById("popupMessage").innerHTML = "Please fill in the following fields: <br>" + missingFields.join(", ");
+                document.getElementById("popupMessage").style.display = "block";
+                document.getElementById("popupOverlay").style.display = "block";
+            }else{
+                hasMissingFields = false;
+            }
 
-        // Load the Google Maps API script
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAS3WxQ8TyNHHUJIxu6imroL3hchsNL7tc&callback=initMap`;
-        script.async = true;
-        script.defer = true
-        document.head.appendChild(script);
+        });
+
+        document.getElementById("popupOverlay").addEventListener("click", function() {
+            document.getElementById("popupMessage").style.display = "none";
+            document.getElementById("popupOverlay").style.display = "none";
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const submitButton = document.getElementById('submitBooking');
+            if (submitButton) {
+                submitButton.addEventListener('click', function(event) {
+                    if (hasMissingFields == true) {
+                        return;
+                    }
+                    event.preventDefault(); 
+                    const bookingData = {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        selectedDate: document.getElementById('selectedDate').value,
+                        selectedTime: document.getElementById('selectedTime').value,
+                        address: document.getElementById('address').value,
+                        type: document.getElementById('type').value,
+                        payment: document.getElementById('payment').value,
+                        message: document.getElementById('message').value
+                    };
+                    localStorage.setItem(bookingData, JSON.stringify(bookingData));
+
+                    fetch('https://cruzhouserepair.netlify.app/.netlify/functions/sendBookingEmail', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(bookingData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.href = 'confirmation.html';
+                        } else {
+                            alert('Failed to send booking data. Contacting owner.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to send booking data. Contacting owner.');
+                    });
+                });
+            }
+        });
     </script>
 </body>
 </html>

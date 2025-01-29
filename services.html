@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Services offered by Cruz Home Repair - Professional interior and exterior home repairs">
+    <meta name="keywords" content="home repair, interior repair, exterior repair, remodeling, maintenance">
+    <title>Our Services - Cruz Home Repair</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background-color: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .lightbox img {
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 8px;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="services.html">Services</a>
+    </nav>
+    <!-- here is all the service cards that will contain the images of past works -->
+    <div class="container">
+        <h1>Our Services</h1>
+        <p>Take a look at the professional home repair and improvements we have done before.</p>
+
+        <section class="services">
+            <div class="service-card" onclick="openLightbox(['images/copperSinkFinish.jpg','images/backSplash.jpg', 'images/backSplashEdge.jpg', 'images/backSplashEdge2.jpg', 'images/copperSinkWindow.jpg', 'images/sinkCounter.jpg', 'images/sinkCounterProgress.jpg', 'images/sinkInstalation.jpg'])">
+                <img src="images/copperSinkFinish.jpg" alt="Interior Remodeling">
+                <h2>Copper Sink</h2>
+                <p>Starting from an empty wall, everything from the sink to the cabbinets were installed.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/ceilingProgress.jpg', 'images/ceiling.jpg', 'images/ceilingFan.jpg'])">
+                <img src="images/ceilingProgress.jpg" alt="Interior Remodeling">
+                <h2>Ceiling Detail</h2>
+                <p>Created this triangular piece at the top of the ceiling as well as other details in another room.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/bathroomFinish.jpg', 'images/bathroom.jpg', 'images/bathroomProgress.jpg', 'images/bathroomShower.jpg', 'images/bathroomTileGrout.jpg', 'images/bathroomTilesWindows.jpg', 'images/showerInstalation.jpg', 'images/wallTiles.jpg'])">
+                <img src="images/bathroomFinish.jpg" alt="Interior Remodeling">
+                <h2>Bathroom Ceramic </h2>
+                <p>Remodeled this bath with tile, glass door, and included a storage compartment.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/brickWall.jpg', 'images/moreBrickWall.jpg'])">
+                <img src="images/brickWall.jpg" alt="Interior Remodeling">
+                <h2>Brick Wallpaper</h2>
+                <p>Covered this wall with seamless brick wallpaper.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/bathCeramicTiles3.jpg', 'images/bathCeramicTiles.jpg', 'images/bathCeramicTiles2.jpg', 'images/bathGrout.jpg', 'images/bathGrout2.jpg'])">
+                <img src="images/bathCeramicTiles3.jpg" alt="Interior Remodeling">
+                <h2>Bathroom Ceramic Tiles</h2>
+                <p>Demolished and remodeled this bath with ceramic tiles.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/crownMolding.jpg'])">
+                <img src="images/crownMolding.jpg" alt="Interior Remodeling">
+                <h2>Crown Molding</h2>
+                <p>Have installed crown molding before as well.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/copperBathroomFinish.jpg', 'images/copper.jpg', 'images/copperBathroomDoor.jpg', 'images/copperBathroomProgress.jpg', 'images/copperWall.jpg', 'images/sink.jpg', 'images/storage.jpg'])">
+                <img src="images/copperBathroomFinish.jpg" alt="Interior Remodeling">
+                <h2>Remodeled Bathroom</h2>
+                <p>Remodeled the entire bathroom into what you see here.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/moreSiding.JPG', 'images/everythingHouseSide.jpg', 'images/houseSide.jpg', 'images/siding.JPG'])">
+                <img src="images/moreSiding.JPG" alt="Exterior Construction">
+                <h2>Siding</h2>
+                <p>Have installed sidings.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/deck.jpg', 'images/portchAndPaint.jpg', 'images/viewingDeck.jpg'])">
+                <img src="images/deck.jpg" alt="Exterior Construction">
+                <h2>Deck and Porch</h2>
+                <p>Have built entire porch and decks and painted them.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/copperSinkDoor.jpg', 'images/door.jpg', 'images/doorFrames.jpg', 'images/doorPainting.jpg'])">
+                <img src="images/copperSinkDoor.jpg" alt="Interior Remodeling">
+                <h2>Doors</h2>
+                <p>Have installed and made frames for multiple doors.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/fixedEdge.jpg', 'images/damagedWallEdge.jpg', 'images/moreDamagedEdge.jpg'])">
+                <img src="images/fixedEdge.jpg" alt="Interior Repairs">
+                <h2>Damaged Wall Edge</h2>
+                <p>Repaired walls and made them look seamless.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/expandingHouse.jpg'])">
+                <img src="images/expandingHouse.jpg" alt="Exterior Construction">
+                <h2>Expanded Room</h2>
+                <p>Have expanded rooms and made them look seamless.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/kitchenRemodeling.jpg', 'images/kitchenCabinets.jpg'])">
+                <img src="images/kitchenRemodeling.jpg" alt="Interior Remodeling">
+                <h2>Cabinets</h2>
+                <p>Have remodeled and installed cabinets for kitchens.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/paintingShed.png', 'images/painting.png', 'images/paintingAndSkirting.jpg', 'images/paintingWall.jpg', 'images/shadeAndPaing.png'])">
+                <img src="images/paintingShed.png" alt="Interior and Exterior">
+                <h2>Painting</h2>
+                <p>Apart from building all these, ive also worked on painting on multiple occations.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/woodFloor.jpg', 'images/moreWoodFloor.jpg', 'images/woodFlooringFinish.jpg'])">
+                <img src="images/woodFloor.jpg" alt="Interior Remodeling">
+                <h2>Flooring</h2>
+                <p>Have installed multiple flooring types.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/tapeAndBed.jpg', 'images/wallFrame.jpg', 'images/tapeAndBedCloset.jpg', 'images/moreTapeAndBed.jpg', 'images/tapeAndBedGreenWall.png', 'images/tapeAndBedGreenWall(2).jpg', 'images/wallFrameWithSheetrockAndTapeAndBed.jpg'])">
+                <img src="images/tapeAndBed.jpg" alt="Interior Remodeling">
+                <h2>Tape and Bed</h2>
+                <p>Have built multiple rooms starting from an empty space.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/roofing.png', 'images/shingles.jpg'])">
+                <img src="images/roofing.png" alt="Interior Remodeling">
+                <h2>Roofing</h2>
+                <p>Have multiple years working in roofing.</p>
+            </div>
+
+            <div class="service-card" onclick="openLightbox(['images/whiteShelves.jpg', 'images/shelves.jpg'])">
+                <img src="images/whiteShelves.jpg" alt="Interior Remodeling">
+                <h2>Shelves</h2>
+                <p>Have built shelves as well.</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <span class="nav-btn prev" onclick="changeImage(-1)">&#10094;</span>
+        <img id="lightbox-img" src="">
+        <span class="nav-btn next" onclick="changeImage(1)">&#10095;</span>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Cruz Home Repair. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let currentImages = [];
+        let currentIndex = 0;
+
+        function openLightbox(images) {
+            currentImages = images;
+            currentIndex = 0;
+            document.getElementById("lightbox-img").src = currentImages[currentIndex];
+            document.getElementById("lightbox").style.display = "flex";
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox").style.display = "none";
+        }
+
+        function changeImage(direction) {
+            currentIndex = (currentIndex + direction + currentImages.length) % currentImages.length;
+            document.getElementById("lightbox-img").src = currentImages[currentIndex];
+        }
+        
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Escape") {
+                closeLightbox();
+            }
+        });
+        document.getElementById("lightbox").addEventListener("click", function(event) {
+            if (event.target === this) {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>
