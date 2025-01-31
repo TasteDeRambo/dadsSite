@@ -57,18 +57,17 @@
             border-radius: 4px;
         }
         button {
-            width: 100%;
-            padding: 1rem;
+            padding: 1rem 2rem;
+            margin: 0.5rem;
             border: none;
-            background: #4CAF50;
-            color: white;
-            font-size: 1rem;
-            margin-top: 1rem;
+            border-radius: 4px;
             cursor: pointer;
-            transition: 0.3s;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
         button:hover {
-            background: #45a049;
+            background-color: #00ff0862;
+            color: white;
         }
         input[type="date"] {
             width: 100%;
@@ -115,12 +114,98 @@
             background: rgba(0, 0, 0, 0.5);
             display: none;
         }
+        :root {
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --nav-bg: #333;
+            --nav-text: white;
+            --container-bg: white;
+            --card-bg: #fff;
+            --button-bg: #4CAF50;
+            --button-text: white;
+            --input-bg: #fff;
+            --input-text: #333;
+        }
+
+        .dark-theme {
+            --bg-color: #121212;
+            --text-color: #f5f5f5;
+            --nav-bg: #222;
+            --nav-text: #f5f5f5;
+            --container-bg: #1e1e1e;
+            --card-bg: #2a2a2a;
+            --button-bg: #4CAF50;
+            --button-text: white;
+            --input-bg: #333;
+            --input-text: #f5f5f5;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        nav {
+            background-color: var(--nav-bg);
+        }
+
+        nav a {
+            color: var(--nav-text);
+        }
+
+        .container {
+            background: var(--container-bg);
+            color: var(--text-color);
+        }
+
+        .card {
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        button {
+            background: var(--button-bg);
+            color: var(--button-text);
+        }
+
+        input, select, textarea {
+            background: var(--input-bg);
+            color: var(--input-text);
+            border: 1px solid #ccc;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-color);
+        }
+
+        footer {
+            background-color: var(--nav-bg);
+            color: var(--nav-text);
+        }
+        #theme-toggle {
+        padding: 0.5rem 1rem;
+        margin: 0rem;
+        margin-left: 1rem;
+        border: none;
+        background: var(--button-bg);
+        color: var(--button-text);
+        cursor: pointer;
+        font-weight: lighter;
+        font-size: 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s, border-radius 0.3s;
+        }
+
+        #theme-toggle:hover {
+            background: #45a049;
+        }
     </style>
 </head>
 <body>
     <nav>
         <a href="index.html">Home</a>
         <a href="services.html">Services</a>
+        <button id="theme-toggle">🌙 Dark Mode</button>
     </nav>
     
     <div class="container">
@@ -264,6 +349,19 @@
                     });
                 });
             }
+        });
+        const themeToggle = document.getElementById('theme-toggle');
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggle.textContent = '☀️ Light Mode';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
         });
     </script>
 </body>

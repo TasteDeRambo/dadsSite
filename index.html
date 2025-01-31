@@ -60,14 +60,22 @@
 
         .service-Card {
             background-color: #f5f5f5;
+            color: var(--text-color);
             padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s, color 0.3s;
+        }
+        .service-Card h2, 
+        .service-Card p, 
+        .service-Card ul, 
+        .service-Card li {
+            color: var(--text-color);
         }
 
         .service-Card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.02);
+            background-color: #ffffff30;
         }
 
         .contact {
@@ -79,8 +87,8 @@
         }
 
         button {
-            padding: 1rem 2rem;
-            margin: 0.5rem;
+            padding: 1rem 2rem;;
+            margin: 1rem;
             border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -89,7 +97,7 @@
         }
 
         button:hover {
-            background-color: #4CAF50;
+            background-color: #00ff0862;
             color: white;
         }
 
@@ -104,12 +112,72 @@
             padding: 1rem;
             margin-top: 2rem;
         }
+        :root {
+        --bg-color: #ffffff;
+        --text-color: #333;
+        --nav-bg: #333;
+        --nav-text: white;
+        --card-bg: #f5f5f5;
+        --button-bg: #4CAF50;
+        --button-text: white;
+        }
+
+        .dark-theme {
+            --bg-color: #121212;
+            --text-color: #f5f5f5;
+            --nav-bg: #222;
+            --nav-text: #f5f5f5;
+            --card-bg: #1e1e1e;
+            --button-bg: #4CAF50;
+            --button-text: white;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        nav {
+            background-color: var(--nav-bg);
+        }
+
+        nav a {
+            color: var(--nav-text);
+        }
+
+        .service-Card, .contact {
+            background-color: var(--card-bg);
+        }
+
+        button {
+            background-color: var(--button-bg);
+            color: var(--button-text);
+        }
+        
+        #theme-toggle {
+        padding: 0.5rem 1rem;
+        margin: 0rem;
+        margin-left: 1rem;
+        border: none;
+        background: var(--button-bg);
+        color: var(--button-text);
+        cursor: pointer;
+        font-weight: lighter;
+        font-size: 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s, color 0.3s, border-radius 0.3s;
+        }
+
+        #theme-toggle:hover {
+            background: #45a049;
+        }
     </style>
 </head>
 <body>
     <nav>
         <a href="index.html">Home</a>
         <a href="services.html">Services</a>
+        <button id="theme-toggle">🌙 Dark Mode</button>
     </nav>
     <div class="container">
         <header class="hero" id="home">
@@ -183,6 +251,21 @@
         }
         setInterval(cycleBackground, 5000); // Change image every 5 seconds
         cycleBackground(); // Initialize first image
+        
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Apply stored theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeToggle.textContent = '☀️ Light Mode';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
     </script>
 </body>
 </html>
